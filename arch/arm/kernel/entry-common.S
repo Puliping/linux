@@ -25,6 +25,11 @@
 	.endm
 #endif
 
+.data
+.global last_nr
+  last_nr: .word 0x0
+.text
+
 #include "entry-header.S"
 
 
@@ -186,7 +191,13 @@ ENTRY(vector_swi)
 	/* Legacy ABI only. */
  USER(	ldr	scno, [lr, #-4]		)	@ get SWI instruction
 #endif
-
+  push {r6}
+  ldr r6, =last_nr
+  cmp scno, #404
+  beq end_compare_scno
+  str scno, [r6]
+end_compare_scno:
+	pop {r6}
 	uaccess_disable tbl
 
 	adr	tbl, sys_call_table		@ load syscall table pointer
