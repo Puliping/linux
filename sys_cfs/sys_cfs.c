@@ -55,7 +55,7 @@ struct Node* newNode(int new_pid, unsigned long long new_vruntime) {
 void printList(struct Node* head) {
 
     struct Node* temp = head;
-	int cont = 0;
+	
     while (temp != NULL) {
         pr_info("pid%d  virtualRuntime %llu \n", temp->pid, temp->virtual_time);
 		
