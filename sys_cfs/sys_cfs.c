@@ -67,16 +67,16 @@ void printList(struct Node* head) {
 asmlinkage unsigned long sys_cfs(void){
 
 	struct task_struct* task_list;
+    struct task_struct* p;
 	struct Node* head = NULL;
+    struct Node* new_node ;
 
+    for_each_process_thread(task_list, p) {
 
-	for_each_process(task_list) {
-		
-		struct Node* new_node = newNode(task_list->pid, task_list->se.vruntime);
-		
-		sortedInsert(&head, new_node);
-
-	}
+        pr_info("== %s [%d]\n", task_list->comm, task_list->pid);
+        new_node = newNode(p->pid, p->se.vruntime);
+        sortedInsert(&head, new_node);
+    }
 
 	printList(head);
 
