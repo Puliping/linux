@@ -44,7 +44,6 @@ struct Node* newNode(int new_pid, unsigned long long new_vruntime) {
 
     struct Node* new_node = (struct Node*)kmalloc( sizeof(struct Node), GFP_KERNEL );
  
-    /* put in the data  */
     new_node->virtual_time = new_vruntime;
 	new_node->pid = new_pid;
     new_node->next = NULL;
@@ -58,9 +57,10 @@ void printList(struct Node* head) {
 	
     while (temp != NULL) {
         pr_info("pid%d  virtualRuntime %llu \n", temp->pid, temp->virtual_time);
-		
 		temp = temp->next;
     }
+    pr_info("\n");
+
 }
 
 
@@ -72,10 +72,10 @@ asmlinkage unsigned long sys_cfs(void){
     struct Node* new_node ;
 
     for_each_process_thread(task_list, p) {
-
-        pr_info("== %s [%d]\n", task_list->comm, task_list->pid);
+        
         new_node = newNode(p->pid, p->se.vruntime);
         sortedInsert(&head, new_node);
+    
     }
 
 	printList(head);
